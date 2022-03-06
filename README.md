@@ -23,32 +23,32 @@ All images until were using a special type of blurring: [Bilateral Filtering](ht
 
 This type of blurring is the best option when we want to avoid the general foggy outputs from the regular Gaussian Blur. However, it comes at a considerable performance cost. This is because, unlike Gaussian Blur, the bilateral filter should not be implemented in 2 pases (and therefore we need a nested for-loop).  
   
-The following extract of code can be found at "*data/shaders/ambientBlur.frag*":
+The following extract of code can be found at *data/shaders/ambientBlur.frag*:
 
 ```
 float BilateralFilter()
 {
-	// Get the size of each pixel (to know the offsets when looking for the neighbours)
+    // Get the size of each pixel (to know the offsets when looking for the neighbours)
     vec2 tex_offset = 1.0 / textureSize(inputTexture, 0);
     float result = 0.0;
-	float normalizing_factor = 0.0;
-	float mAO = texture(inputTexture, uvs).r;
-
-	int blur_width = steps;
-	for(int i = -blur_width + 1 ; i < blur_width ; ++i)
-	{
-		for(int j = -blur_width + 1 ; j < blur_width ; ++j)
-		{
-			float ao_sample      = texture(inputTexture, uvs + tex_offset * vec2(i,j)).r;
-			float spatial_weight = GaussianSpatial(i*i+j*j);
-			float range_weight   = GaussianRange(abs(mAO - ao_sample) * abs(mAO - ao_sample));
-
-			result += ao_sample * spatial_weight * range_weight;
-			normalizing_factor += spatial_weight * range_weight;
-		}
-	}
-	
-	return result / normalizing_factor;
+    float normalizing_factor = 0.0;
+    float mAO = texture(inputTexture, uvs).r;
+    
+    int blur_width = steps;
+    for(int i = -blur_width + 1 ; i < blur_width ; ++i)
+    {
+        for(int j = -blur_width + 1 ; j < blur_width ; ++j)
+        {
+            float ao_sample      = texture(inputTexture, uvs + tex_offset * vec2(i,j)).r;
+            float spatial_weight = GaussianSpatial(i*i+j*j);
+            float range_weight   = GaussianRange(abs(mAO - ao_sample) * abs(mAO - ao_sample));
+            
+            result += ao_sample * spatial_weight * range_weight;
+            normalizing_factor += spatial_weight * range_weight;
+        }
+    }
+    
+    return result / normalizing_factor;
 }
 ```
 
