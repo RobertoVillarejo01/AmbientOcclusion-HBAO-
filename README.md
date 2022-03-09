@@ -2,8 +2,9 @@
 
 ## About
 
-Program built in a C++ Engine from scratch using SDL2, glew, OpenGL, glm and ImGui.  
-Implementation based on the paper from NVIDIA: 
+* Individual assingment for the subject Advanced Rendering Techniques in Digipen Bilbao  
+* Engine built from scratch in C++ using SDL2, glew, OpenGL, glm and ImGui.  
+* Implementation based on the paper from NVIDIA: 
 
 >Bavoil, L., Sainz, M., & Dimitrov, R. (2008). Image-space horizon-based ambient occlusion. In ACM SIGGRAPH 2008 talks (pp. 1-1).
 
@@ -19,7 +20,7 @@ Implementation based on the paper from NVIDIA:
 
 ## Blur type
 
-All images until were using a special type of blurring: [Bilateral Filtering](https://en.wikipedia.org/wiki/Bilateral_filter)  
+All images until now were using a special kind of blurring: [Bilateral Filtering](https://en.wikipedia.org/wiki/Bilateral_filter)  
 
 This type of blurring is the best option when we want to avoid the general foggy outputs from the regular Gaussian Blur. However, it comes at a considerable performance cost. This is because, unlike Gaussian Blur, the bilateral filter should not be implemented in 2 pases (and therefore we need a nested for-loop).  
   
@@ -49,6 +50,17 @@ float BilateralFilter()
     }
     
     return result / normalizing_factor;
+}
+```
+```
+layout(location = 1) uniform float denominatorSpatial;              // 8.0 by default
+layout(location = 2) uniform float denominatorRange;                // 0.2 by default
+
+float GaussianSpatial(float x2) {
+	return exp(-x2 * exp_denominatorSpatial) * denominatorSpatial;
+}
+float GaussianRange(float x2) {
+	return exp(-x2 * exp_denominatorRange) * denominatorRange;
 }
 ```
 
